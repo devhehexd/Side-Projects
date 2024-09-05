@@ -1,12 +1,12 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function Login() {
 
   const navigate = useNavigate();
 
-  const [inputs, setInputs] = useState({ id: '', passowrd: '' });
+  const [inputs, setInputs] = useState({ id: '', password: '' });
 
   const { id, password } = inputs;
 
@@ -24,7 +24,7 @@ export default function Login() {
         if (res.status === 200) {
           if (res.data.isAuthenticated) {
             localStorage.setItem('token', res.data.token);
-            navigate('/login')
+            navigate('/userhome')
           }
           else {
             alert('로그인 실패')
@@ -36,36 +36,15 @@ export default function Login() {
       })
   }
 
-  let token = localStorage.getItem('token');
-  let menu = '';
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    navigate('/userhome')
-  }
-
-  if (token === null) {
-    menu =
-      <div>
-        <h2>로그인</h2>
-        <hr />
-        ID: <input type="text" name="id" value={id} onChange={onChange} /><br />
-        Password: <input type="password" name="password" value={password} onChange={onChange} /><br />
-        <button onClick={login}>로그인</button>
-      </div>
-  }
-  else {
-    menu =
-      <div>
-        <button class="" onClick={logout}>로그아웃</button> |
-        <Link to="/user/userinfo"> 내 정보확인</Link> |
-        <Link to="/board/allproductlist">전체 상품 목록</Link>
-      </div>
-  }
-
   return (
     <div>
-      {menu}
+      <h2>로그인</h2>
+      <hr />
+      아이디: <input type="text" name="id" value={id} onChange={onChange} /><br />
+      비밀번호: <input type="password" name="password" value={password} onChange={onChange} /><br />
+      <button onClick={login}>로그인</button><br /><br />
+      회원이 아니신가요?
+      <Link to="/createaccount"> 회원가입</Link>
     </div>
   )
 }

@@ -41,7 +41,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((authz) ->
                         authz.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
                                 .requestMatchers("/", "/createaccount", "/login").permitAll()
-                                .requestMatchers("/board/**").authenticated())
+                                .requestMatchers("/userhome/**").authenticated())
                 .addFilterBefore((new JwtAuthenticationFilter(tokenProvider)),
                         UsernamePasswordAuthenticationFilter.class);
 

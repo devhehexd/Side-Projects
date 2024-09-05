@@ -1,13 +1,19 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import App from "./App"
 import Login from "./components/Login"
+import CreateAccount from "./components/CreateAccount"
 import UserHome from "./components/UserHome"
-import { Routes, Route } from "react-router-dom"
 
 export default function Router() {
 
   return (
-    <Routes>
-      <Route path="/userhome" element={<UserHome />} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/createaccount" element={<CreateAccount />} />
+        <Route path="/userhome" element={<UserHome />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
