@@ -40,7 +40,7 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests((authz) ->
                         authz.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                                .requestMatchers("/", "/createaccount", "/login").permitAll()
+                                .requestMatchers("/", "/createaccount", "/login", "/read_img/**", "/board/**").permitAll()
                                 .requestMatchers("/userhome/**").authenticated())
                 .addFilterBefore((new JwtAuthenticationFilter(tokenProvider)),
                         UsernamePasswordAuthenticationFilter.class);

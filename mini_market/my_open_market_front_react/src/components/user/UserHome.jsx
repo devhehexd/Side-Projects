@@ -15,8 +15,8 @@ export default function UserHome() {
       <h3>Open Market</h3>
       <hr />
       <button onClick={logout}>로그아웃 </button> |
-      <Link to="/member/info"> 내 정보확인</Link> |
-      <Link to="/board/boardlist"> 글 목록</Link>
+      <Link to="/board/post"> 상품 등록</Link> |
+      <Link to="/board/list"> 내 상품 목록</Link>
     </div>
   )
 }
