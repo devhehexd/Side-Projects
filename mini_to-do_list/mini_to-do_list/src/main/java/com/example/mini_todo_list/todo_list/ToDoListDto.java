@@ -13,25 +13,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Entity
-public class ToDoList {
+public class ToDoListDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int number;
-
     private String toDo;
     private String details;
-
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User writer;
-
     private Date postDate;
-
-    @PrePersist
-    public void postDate() {
-        postDate = new Date();
-    }
 }

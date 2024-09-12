@@ -1,12 +1,15 @@
 package com.example.mini_todo_list.todo_list;
 
+import com.example.mini_todo_list.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,42 +17,34 @@ import java.util.Map;
 public class ToDoListController {
 
     @Autowired
-    ToDoListService toDoListService;
+    private ToDoListService toDoListService;
 
     @PostMapping("/post")
-    public void postToDo(ToDoList toDo) {
-        toDoListService.addToDo(toDo);
+    public Map postToDo(ToDoListDto toDoListDto) {
+
+        Map toDo = new HashMap<>();
+        boolean isPosted = false;
+
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            System.out.println(authentication.getName());
+            User user = new User(authentication.getName(), "", "");
+            toDoListDto.setWriter(user);
+            toDoListService.saveToDo(toDoListDto);
+            isPosted = true;
+        } catch (Exception e) {
+            System.out.println(toDoListDto);
+            e.printStackTrace();
+        }
+        toDo.put("isPosted", isPosted);
+
+        return toDo;
     }
 
     @GetMapping("/")
-    public List<ToDoList> getToDoList() {
-       return toDoListService.getToDoList();
-    }
-
-    @GetMapping("/tododetails/{todonum}")
-    public Map getToDoByNumber(@PathVariable("todonum") int number) {
+    public Map getToDoList() {
         Map map = new HashMap();
-        ToDoList toDo = toDoListService.getByNumber(number);
-        map.put("toDoDetails", toDo);
+        map.put("toDoList", toDoListService.getToDoList());
         return map;
-    }
-
-    @PutMapping("/tododetails/{todonum}")
-    public void editToDo(@PathVariable("todonum") int number, @RequestBody ToDoList editedToDo) {
-
-        int index = toDoListService.findIndex(number);
-        System.out.println(index);
-
-        ToDoList prevTodolist = toDoListService.getByNumber(number);
-        prevTodolist.setNumber(editedToDo.getNumber());
-        prevTodolist.setToDo(editedToDo.getToDo());
-        prevTodolist.setDetails(editedToDo.getDetails());
-
-        toDoListService.editToDo(index, prevTodolist);
-    }
-
-    @DeleteMapping("/tododetails/{todonum}")
-    public void deleteToDo(@PathVariable("todonum") int number) {
-        toDoListService.deleteToDo(number);
     }
 }

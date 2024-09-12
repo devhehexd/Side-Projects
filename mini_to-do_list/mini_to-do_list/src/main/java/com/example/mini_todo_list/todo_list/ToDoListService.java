@@ -3,35 +3,39 @@ package com.example.mini_todo_list.todo_list;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ToDoListService {
 
     @Autowired
-    ToDoListDao toDoListDao;
+    private ToDoListDao toDoListDao;
 
-    public void addToDo(ToDoList toDo) {
-        toDoListDao.insert(toDo);
+    public ToDoListDto saveToDo(ToDoListDto toDoListDto) {
+
+        ToDoList entity = toDoListDao.save(new ToDoList(toDoListDto.getNumber(),
+                toDoListDto.getToDo(), toDoListDto.getDetails(),
+                toDoListDto.getWriter(), toDoListDto.getPostDate()));
+
+        return new ToDoListDto(entity.getNumber(), entity.getToDo(),
+                entity.getDetails(), entity.getWriter(), entity.getPostDate());
     }
 
-    public List<ToDoList> getToDoList() {
-        return toDoListDao.selectAll();
+    public List<ToDoListDto> getToDoList() {
+
+        List<ToDoList> tmp = toDoListDao.findAll();
+        List<ToDoListDto> toDoList = new ArrayList<>();
+
+        for (ToDoList entity : tmp) {
+            toDoList.add(new ToDoListDto(entity.getNumber(), entity.getToDo(),
+                    entity.getDetails(), entity.getWriter(), entity.getPostDate()));
+        }
+
+        return toDoList;
     }
 
-    public ToDoList getByNumber(int number) {
-        return toDoListDao.findByNumber(number);
-    }
-
-    public void editToDo(int index, ToDoList editedToDo) {
-        toDoListDao.update(index, editedToDo);
-    }
-
-    public int findIndex(int number) {
-       return toDoListDao.findIndex(number);
-    }
-
-    public void deleteToDo(int number) {
-        toDoListDao.delete(number);
+    public void deleteToDoByNum(int number) {
+        toDoListDao.deleteById(number);
     }
 }

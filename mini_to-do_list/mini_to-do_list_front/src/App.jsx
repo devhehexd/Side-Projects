@@ -1,40 +1,25 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
+import Login from "./components/user/Login";
+import ToDoList from "./components/to-do_list/ToDoList";
 
 function App() {
 
-  const [toDoList, setToDoList] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
-    axios.get('http://localhost:8081/')
-      .then(res => {
-        setToDoList(res.data)
-      })
-  }, [])
+    const storedToken = localStorage.getItem('token');
+    if (storedToken !== token) {
+      setToken(storedToken);
+    }
+  }, [token]);
+
 
   return (
     <div>
-      <h3>To-Do List</h3>
-      <Link to="/post">추가</Link>
-      <form>
-        <table border="1">
-          <thead>
-            <tr>
-              <td>우선 순위</td>
-              <td>To-Do</td>
-            </tr>
-          </thead>
-          <tbody>
-            {toDoList.map((toDo) => (
-              <tr key={toDo.number}>
-                <th>{toDo.number}</th>
-                <th><Link to={"/tododetails/" + toDo.number}>{toDo.toDo}</Link></th>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </form>
+      <h1>To-Do List</h1>
+      {token === null ? <Login setToken={setToken} /> : <ToDoList setToken={setToken} />}
     </div>
   )
 }
