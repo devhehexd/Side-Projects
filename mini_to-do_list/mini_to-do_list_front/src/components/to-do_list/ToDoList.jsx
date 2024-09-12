@@ -1,55 +1,54 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-function ToDoList({ setToken }) {
-
-  const logout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-  }
+function ToDoList() {
 
   const token = localStorage.getItem('token');
 
-  console.log(token);
+  const [toDoList, setToDolist] = useState([]);
 
-  const [toDoList, setToDoList] = useState([]);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:8081/', { headers: { token: token } })
-      .then(function (res) {
-        if (res.status === 200) {
-          setToDoList(res.data.toDoList)
-        }
-        else {
-          alert('비정상 응답')
-        }
-      })
+    if (token) {
 
-  }, [])
+      const decodedToken = jwtDecode(token);
+      setUserId(decodedToken.userId);
+      console.log(decodedToken)
+
+      axios.get('http://localhost:8081/', { headers: { Authorization: `Bearer ${token}` } })
+        .then(function (res) {
+          if (res.status === 200) {
+            setToDolist(res.data.toDoList);
+          } else {
+            alert('비정상 응답');
+          }
+        });
+    }
+  }, []);
+
 
   return (
     <div>
-      <button onClick={logout}>로그아웃</button><br /><br />
-      <Link to="/post">추가</Link>
-      <form>
-        <table border="1">
-          <thead>
-            <tr>
-              <td>번호</td>
-              <td>To-Do</td>
-            </tr>
-            {toDoList.map((item, idx) => {
+      <table border="1">
+        <thead>
+          <tr>
+            <th>번호</th>
+            <th>To-Do</th>
+          </tr>
+        </thead>
+        <tbody>
+          {toDoList
+            .filter(item => item.writer.id === userId) // 필터링 기준
+            .map((item, idx) => (
               <tr key={idx}>
-                <th>{item.number}</th>
-                <th>{item.toDo}</th>
+                <td>{item.number}</td>
+                <td>{item.toDo}</td>
               </tr>
-            })}
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </form>
+            ))}
+        </tbody>
+      </table>
     </div>
   );
 }

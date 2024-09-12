@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import axios from "axios";
 
 export default function Post() {
@@ -14,11 +13,12 @@ export default function Post() {
 
     let formdata = new FormData(document.getElementById('post'));
 
-    axios.post('http://localhost:8081/post', formdata, { headers: { toke: token } })
+    axios.post('http://localhost:8081/post', formdata, { headers: { Authorization: `Bearer ${token}` } })
       .then(function (res) {
         if (res.status === 200) {
           if (res.data.isPosted) {
             alert('등록 완료')
+            navigate('/')
           }
           else {
             alert('등록 실패')
@@ -28,7 +28,6 @@ export default function Post() {
           alert('글 작성 취소')
         }
       })
-    navigate('/')
   }
 
 

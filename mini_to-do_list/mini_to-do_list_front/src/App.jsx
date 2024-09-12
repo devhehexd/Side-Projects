@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import axios from 'axios';
 import Login from "./components/user/Login";
-import ToDoList from "./components/to-do_list/ToDoList";
+import MyToDoHome from "./components/to-do_list/MyToDoHome";
 
 function App() {
 
@@ -15,11 +13,12 @@ function App() {
     }
   }, [token]);
 
-
   return (
     <div>
       <h1>To-Do List</h1>
-      {token === null ? <Login setToken={setToken} /> : <ToDoList setToken={setToken} />}
+      {token === null ?
+        <Login setToken={setToken} /> :
+        <MyToDoHome setToken={setToken} />}
     </div>
   )
 }

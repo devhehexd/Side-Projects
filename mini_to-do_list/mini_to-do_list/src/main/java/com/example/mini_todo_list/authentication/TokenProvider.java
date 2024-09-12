@@ -65,8 +65,11 @@ public class TokenProvider {
     }
 
     public String resolveToken(HttpServletRequest request) {
-        System.out.println(request.getHeader("token") + "****");
-        return request.getHeader("token");
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     public boolean validateToken(String token) {
