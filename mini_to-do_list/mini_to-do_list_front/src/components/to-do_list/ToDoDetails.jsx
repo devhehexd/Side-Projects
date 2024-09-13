@@ -4,11 +4,23 @@ import axios from "axios";
 
 export default function ToDoDetails() {
 
+  const token = localStorage.getItem('token');
+
   const navigate = useNavigate();
 
-  const { todonum } = useParams();
-  const [toDoDetails, setToDoDetails] = useState({ number: '', toDo: '', details: '' })
-  const { number, toDo, details } = toDoDetails;
+  const { postnum } = useParams();
+
+  const [toDoDetails, setToDoDetails] = useState({ number: 0, toDo: '', details: '', postDate: '' })
+
+  const { number, toDo, details, postDate } = toDoDetails;
+
+  const dateFormat = (postDate) => {
+    const date = new Date(postDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`;
+  }
 
   const onChange = (evt) => {
 
@@ -22,7 +34,7 @@ export default function ToDoDetails() {
 
   useEffect(() => {
 
-    axios.get('http://localhost:8081/tododetails/' + todonum)
+    axios.get('http://localhost:8081/details/' + postnum)
       .then(function (res) {
         if (res.status === 200) {
           setToDoDetails(res.data.toDoDetails)
@@ -37,22 +49,19 @@ export default function ToDoDetails() {
 
     evt.preventDefault();
 
-    axios.put('http://localhost:8081/tododetails/' + todonum, toDoDetails)
+    axios.put('http://localhost:8081/details/' + postnum, toDoDetails, { headers: { Authorization: `Bearer ${token}` } })
       .then(function (res) {
         if (res.status === 200) {
-          alert('수정 완료')
-          navigate('/')
+          if (res.data.isUpdated) {
+            alert('수정 완료')
+            navigate('/')
+          }
+          else {
+            alert('수정 실패')
+          }
         }
-      })
-  }
-
-  const del = () => {
-
-    axios.delete('http://localhost:8081/tododetails/' + todonum)
-      .then(function (res) {
-        if (res.status === 200) {
-          alert('삭제 완료')
-          navigate('/')
+        else {
+          alert('비정상 응답')
         }
       })
   }
@@ -60,13 +69,17 @@ export default function ToDoDetails() {
   return (
 
     <div>
-      <h3>상세 내용</h3>
+      <h1>상세 내용</h1>
       <form onSubmit={edit}>
         <table border="1">
           <tbody>
             <tr>
-              <td>우선 순위</td>
-              <td><input type="text" name="number" value={number} onChange={onChange} /></td>
+              <td>번호</td>
+              <td><input type="text" name="number" value={number} readOnly /></td>
+            </tr>
+            <tr>
+              <td>등록일</td>
+              <td><input type="date" name="postDate" value={dateFormat(postDate)} readOnly /></td>
             </tr>
             <tr>
               <td>To-Do</td>
@@ -79,7 +92,6 @@ export default function ToDoDetails() {
           </tbody>
         </table>
         <input type="submit" value="수정" />
-        <input type="button" value="삭제" onClick={del} />
       </form>
     </div>
   )

@@ -35,6 +35,17 @@ public class ToDoListService {
         return toDoList;
     }
 
+    public ToDoListDto getToDoByNumber(int number) {
+        ToDoList toDoList = toDoListDao.findById(number).orElse(null);
+
+        if (toDoList != null) {
+            return new ToDoListDto(toDoList.getNumber(), toDoList.getToDo(),
+                    toDoList.getDetails(), toDoList.getWriter(),
+                    toDoList.getPostDate());
+        }
+        return null;
+    }
+
     public void deleteToDoByNum(int number) {
         toDoListDao.deleteById(number);
     }

@@ -4,10 +4,7 @@ import com.example.mini_todo_list.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +19,7 @@ public class ToDoListController {
     @PostMapping("/post")
     public Map postToDo(ToDoListDto toDoListDto) {
 
-        Map toDo = new HashMap<>();
+        Map map = new HashMap<>();
         boolean isPosted = false;
 
         try {
@@ -36,15 +33,60 @@ public class ToDoListController {
             System.out.println(toDoListDto);
             e.printStackTrace();
         }
-        toDo.put("isPosted", isPosted);
+        map.put("isPosted", isPosted);
 
-        return toDo;
+        return map;
     }
 
     @GetMapping("/")
     public Map getToDoList() {
         Map map = new HashMap();
         map.put("toDoList", toDoListService.getToDoList());
+        return map;
+    }
+
+    @GetMapping("/details/{postnum}")
+    public Map toDoDetails(@PathVariable("postnum") int number) {
+        Map map = new HashMap();
+        ToDoListDto toDoDetails = toDoListService.getToDoByNumber(number);
+        map.put("toDoDetails", toDoDetails);
+        return map;
+    }
+
+    @PutMapping("/details/{postnum}")
+    public Map updateToDo(@PathVariable("postnum") int number, @RequestBody ToDoListDto toDo) {
+
+        Map map = new HashMap();
+        boolean isUpdated = true;
+
+        ToDoListDto currentToDo = toDoListService.getToDoByNumber(number);
+        currentToDo.setToDo(toDo.getToDo());
+        currentToDo.setDetails(toDo.getDetails());
+
+        try {
+            toDoListService.saveToDo(currentToDo);
+        }catch (Exception e) {
+            System.out.println(e);
+            isUpdated = false;
+        }
+
+        map.put("isUpdated", isUpdated);
+        return map;
+    }
+
+    @DeleteMapping("/{postnum}")
+    public Map deleteToDo(@PathVariable("postnum") int number) {
+
+        Map map = new HashMap();
+        boolean isDeleted = true;
+
+        try {
+            toDoListService.deleteToDoByNum(number);
+        }catch (Exception e) {
+            System.out.println(e);
+            isDeleted = false;
+        }
+        map.put("isDeleted", isDeleted);
         return map;
     }
 }

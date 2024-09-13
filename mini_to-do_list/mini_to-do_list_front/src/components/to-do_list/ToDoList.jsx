@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 function ToDoList() {
 
@@ -15,7 +17,6 @@ function ToDoList() {
 
       const decodedToken = jwtDecode(token);
       setUserId(decodedToken.userId);
-      console.log(decodedToken)
 
       axios.get('http://localhost:8081/', { headers: { Authorization: `Bearer ${token}` } })
         .then(function (res) {
@@ -27,6 +28,26 @@ function ToDoList() {
         });
     }
   }, []);
+
+  const deleteToDo = (number) => {
+
+    axios.delete('http://localhost:8081/' + number, { headers: { Authorization: `Bearer ${token}` } })
+      .then(function (res) {
+        if (res.status === 200) {
+          if (res.data.isDeleted) {
+            const editedToDoList = [...toDoList].filter(toDo => toDo.number != number);
+            setToDolist(editedToDoList);
+            alert('삭제 완료')
+          }
+          else {
+            alert('삭제 실패')
+          }
+        }
+        else {
+          alert('비정상 응답')
+        }
+      })
+  }
 
 
   return (
@@ -44,7 +65,8 @@ function ToDoList() {
             .map((item, idx) => (
               <tr key={idx}>
                 <td>{item.number}</td>
-                <td>{item.toDo}</td>
+                <td><Link to={'/details/' + item.number}>{item.toDo}</Link></td>
+                <td><button type="button" onClick={() => deleteToDo(item.number)} >삭제</button></td>
               </tr>
             ))}
         </tbody>
