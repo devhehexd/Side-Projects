@@ -10,9 +10,9 @@ export default function ToDoDetails() {
 
   const { postnum } = useParams();
 
-  const [toDoDetails, setToDoDetails] = useState({ number: 0, toDo: '', details: '', postDate: '' })
+  const [toDoDetails, setToDoDetails] = useState({ number: 0, toDo: '', details: '', postDate: '', dDay: '' })
 
-  const { number, toDo, details, postDate } = toDoDetails;
+  const { number, toDo, details, postDate, dDay } = toDoDetails;
 
   const dateFormat = (postDate) => {
     const date = new Date(postDate);
@@ -37,7 +37,8 @@ export default function ToDoDetails() {
     axios.get('http://localhost:8081/details/' + postnum)
       .then(function (res) {
         if (res.status === 200) {
-          setToDoDetails(res.data.toDoDetails)
+          console.log(res.data.toDoDetails);
+          setToDoDetails(res.data.toDoDetails);
         }
         else {
           alert('비정상 응답')
@@ -78,12 +79,16 @@ export default function ToDoDetails() {
               <td><input type="text" name="number" value={number} readOnly /></td>
             </tr>
             <tr>
+              <td>To-Do</td>
+              <td><input type="text" name="toDo" value={toDo} onChange={onChange} /></td>
+            </tr>
+            <tr>
               <td>등록일</td>
               <td><input type="date" name="postDate" value={dateFormat(postDate)} readOnly /></td>
             </tr>
             <tr>
-              <td>To-Do</td>
-              <td><input type="text" name="toDo" value={toDo} onChange={onChange} /></td>
+              <td>D-Day</td>
+              <td><input type="text" name="dDay" value={dDay} onChange={onChange} /></td>
             </tr>
             <tr>
               <td>상세 내용</td>

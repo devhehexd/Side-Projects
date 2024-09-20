@@ -37,6 +37,7 @@ export default function Post() {
       <h1>To-Do 추가</h1>
       <form id="post" onSubmit={postToDo}>
         To-Do: <input type="text" name="toDo" /><br /><br />
+        D-Day: <input type="date" name="dDay" /><br /><br />
         상세 내용: <textarea name="details" /><br /><br />
         <input type="submit" value="등록"></input>
       </form>

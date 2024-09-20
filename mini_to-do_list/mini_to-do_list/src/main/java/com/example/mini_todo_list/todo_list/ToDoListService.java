@@ -16,10 +16,10 @@ public class ToDoListService {
 
         ToDoList entity = toDoListDao.save(new ToDoList(toDoListDto.getNumber(),
                 toDoListDto.getToDo(), toDoListDto.getDetails(),
-                toDoListDto.getWriter(), toDoListDto.getPostDate()));
+                toDoListDto.getWriter(), toDoListDto.getPostDate(), toDoListDto.getDDay()));
 
         return new ToDoListDto(entity.getNumber(), entity.getToDo(),
-                entity.getDetails(), entity.getWriter(), entity.getPostDate());
+                entity.getDetails(), entity.getWriter(), entity.getPostDate(), entity.getDDay());
     }
 
     public List<ToDoListDto> getToDoList() {
@@ -29,7 +29,7 @@ public class ToDoListService {
 
         for (ToDoList entity : tmp) {
             toDoList.add(new ToDoListDto(entity.getNumber(), entity.getToDo(),
-                    entity.getDetails(), entity.getWriter(), entity.getPostDate()));
+                    entity.getDetails(), entity.getWriter(), entity.getPostDate(), entity.getDDay()));
         }
 
         return toDoList;
@@ -41,7 +41,7 @@ public class ToDoListService {
         if (toDoList != null) {
             return new ToDoListDto(toDoList.getNumber(), toDoList.getToDo(),
                     toDoList.getDetails(), toDoList.getWriter(),
-                    toDoList.getPostDate());
+                    toDoList.getPostDate(), toDoList.getDDay());
         }
         return null;
     }

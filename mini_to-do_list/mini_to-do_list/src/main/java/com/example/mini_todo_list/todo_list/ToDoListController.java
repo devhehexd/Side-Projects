@@ -62,6 +62,7 @@ public class ToDoListController {
         ToDoListDto currentToDo = toDoListService.getToDoByNumber(number);
         currentToDo.setToDo(toDo.getToDo());
         currentToDo.setDetails(toDo.getDetails());
+        currentToDo.setDDay(toDo.getDDay());
 
         try {
             toDoListService.saveToDo(currentToDo);
