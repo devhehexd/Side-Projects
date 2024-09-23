@@ -1,7 +1,6 @@
 package com.example.mini_todo_list.authentication;
 
 import com.example.mini_todo_list.user.UserDto;
-import com.example.mini_todo_list.user.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.security.KeyStore;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
