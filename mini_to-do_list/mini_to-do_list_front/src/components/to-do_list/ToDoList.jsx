@@ -12,6 +12,14 @@ function ToDoList() {
 
   const [userId, setUserId] = useState(null);
 
+  const dateFormat = (postDate) => {
+    const date = new Date(postDate);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`;
+  }
+
   useEffect(() => {
     if (token) {
 
@@ -57,6 +65,7 @@ function ToDoList() {
           <tr>
             <th>번호</th>
             <th>To-Do</th>
+            <th>D-Day</th>
           </tr>
         </thead>
         <tbody>
@@ -66,6 +75,7 @@ function ToDoList() {
               <tr key={idx}>
                 <td>{item.number}</td>
                 <td><Link to={'/details/' + item.number}>{item.toDo}</Link></td>
+                <td>{item.dDay} - {dateFormat(item.postDate)}</td>
                 <td><button type="button" onClick={() => deleteToDo(item.number)} >삭제</button></td>
               </tr>
             ))}
